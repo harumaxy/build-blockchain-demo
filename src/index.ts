@@ -13,6 +13,9 @@ class Transaction {
 }
 
 class Block {
+  // 1回限りのランダム数値
+  public nonce = Math.round(Math.random() * 999999999);
+
   constructor(
     public prevHash: string, // link to prev block
     public transaction: Transaction,
@@ -39,6 +42,20 @@ class Chain {
     return this.chain[this.chain.length - 1];
   }
 
+  mine(nonce: number) {
+    console.log("⛏ mining...");
+    for (let solution = 1; ; solution++) {
+      const hash = crypto.createHash("MD5");
+      hash.update((nonce + solution).toString()).end();
+      const attempt = hash.digest("hex");
+
+      if (attempt.substring(0, 4) === "0000") {
+        console.log(`Solved: ${solution}`);
+        return solution;
+      }
+    }
+  }
+
   addBlock(
     transaction: Transaction,
     senderPublicKey: string,
@@ -52,6 +69,7 @@ class Chain {
     // 送り主の Public Key で検証. 正しければ Chain に Block (Transaction の履歴) を追加できる
     if (isValid) {
       const newBlock = new Block(this.lastBlock.hash, transaction);
+      this.mine(newBlock.nonce);
       this.chain.push(newBlock);
     }
   }
