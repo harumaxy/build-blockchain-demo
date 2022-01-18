@@ -1,6 +1,6 @@
 import * as crypto from "crypto"; // Node built-in lib
 
-class Transaction {
+export class Transaction {
   constructor(
     public amount: number,
     public payer: string, // publicKey
@@ -12,7 +12,7 @@ class Transaction {
   }
 }
 
-class Block {
+export class Block {
   // 1回限りのランダム数値
   public nonce = Math.round(Math.random() * 999999999);
 
@@ -31,7 +31,7 @@ class Block {
 }
 
 // singleton
-class Chain {
+export class Chain {
   public static instance = new Chain();
   chain: Block[];
   constructor() {
@@ -75,7 +75,7 @@ class Chain {
   }
 }
 
-class Wallet {
+export class Wallet {
   public publicKey: string;
   public privateKey: string;
 
